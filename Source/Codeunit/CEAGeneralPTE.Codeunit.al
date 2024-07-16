@@ -29,12 +29,12 @@ codeunit 50000 "CEA General PTE"
     var
         L_RWorkCenter: Record "Work Center";
     begin
-        if not L_RWorkCenter.Get('ASS') then begin
-            L_RWorkCenter."No." := 'ASS';
+        if not L_RWorkCenter.Get('A1') then begin
+            L_RWorkCenter."No." := 'A1';
             L_RWorkCenter.Name := 'Reparto Assemblaggio';
             L_RWorkCenter.Insert();
         end;
-        exit('ASS');
+        exit('A1');
     end;
 
     procedure GetDefaultCLItemCategoryCode(): Text[10]
@@ -43,4 +43,9 @@ codeunit 50000 "CEA General PTE"
         exit('CL');
     end;
 
+    procedure GetDefaultMPItemCategoryCode(): Text[10]
+    // articolo per articoli conto lavoro
+    begin
+        exit('MP');
+    end;
 }

@@ -1,4 +1,4 @@
-pageextension 50006 JobList_PTE extends "Job List"
+pageextension 50006 "Job List PTE" extends "Job List"
 {
     layout
     {
@@ -8,20 +8,19 @@ pageextension 50006 JobList_PTE extends "Job List"
             {
                 ApplicationArea = All;
             }
-            field("Commessa"; Rec."Global Dimension 2 Code")
+            field(Commessa; Rec."Global Dimension 2 Code")
             {
                 ApplicationArea = All;
             }
         }
         addafter("No.")
         {
-            field("Project Desc"; Rec."Project Desc PTE")
+            field("Project Desc"; Rec."Desc. Progetto PTE")
             {
                 ApplicationArea = All;
                 Editable = false;
-                Caption = 'Descrizione Progetto';
             }
-            field("Disegno"; Rec."Disegno PTE")
+            field(Disegno; Rec."Disegno PTE")
             {
                 ApplicationArea = All;
             }

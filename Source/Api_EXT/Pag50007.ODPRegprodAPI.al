@@ -13,7 +13,7 @@ page 50007 ODPRegprodAPI
 
     layout
     {
-        area(content)
+        area(Content)
         {
             repeater(General)
             {

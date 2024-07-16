@@ -22,6 +22,7 @@ codeunit 50002 "BOM Import Mgt. PTE"
         FileName: Text;
         LogMsg: Text;
         CRLF: Text[2];
+        Ritem: Record Item;
 
     trigger OnRun()
     begin
@@ -32,7 +33,6 @@ codeunit 50002 "BOM Import Mgt. PTE"
     var
         L_CSVBuffer: Record "CSV Buffer" temporary;
         L_TempLines: Record "FLEX Work File FLE" temporary;
-        L_RItem: Record Item;
         L_RBOM: Record "Production BOM Header";
         L_RRoutingH: Record "Routing Header";
         L_RSKU: Record "Stockkeeping Unit";
@@ -46,21 +46,18 @@ codeunit 50002 "BOM Import Mgt. PTE"
         InitImportBOMLog();
         FileName := CFileMgt.GetFileNameWithoutExtension(FileName);
         // verifica dal articolo/variante da elaborare, in caso da segnare come errore
-        if L_RItem.Get(FileName) then begin
+        if Ritem.Get(FileName) then begin
+            // CHECK DA eliminare?
 
-            if L_RItem."Base Unit of Measure" = '' then begin
-                L_RItem."Base Unit of Measure" := CCEA.GetDefalutUM();
-                L_RItem.Modify();
-            end;
 
         end else begin
             //TODO creazione articolo
         end;
         //assegno il log all'articolo 
-        RActivityLog."Record ID" := L_RItem.RecordId;
+        RActivityLog."Record ID" := Ritem.RecordId;
         RActivityLog.Modify();
         // creo la DB
-        if not L_RBOM.Get(L_RItem."No.") then begin
+        if not L_RBOM.Get(Ritem."No.") then begin
             ClearLastError();
             L_OK := F_CreateNewBOMH(L_RBOM, FileName, F_GetDesc());
             AddMsgLine(StrSubstNo(LBL_NewBOMH, FileName), L_OK);
@@ -73,7 +70,7 @@ codeunit 50002 "BOM Import Mgt. PTE"
         // creo il ciclo
         if not L_RRoutingH.Get(FileName) then begin
             ClearLastError();
-            if (L_RItem."Replenishment System" = L_RItem."Replenishment System"::"Prod. Order") and (L_RItem."Item Category Code" <> CCEA.GetDefaultCLItemCategoryCode) then
+            if Ritem."Replenishment System" = Ritem."Replenishment System"::"Prod. Order" then
                 L_WorkCenterNo := CCEA.GetDefaultWorkCenterCode();
             L_OK := F_CreateNewRoutingH(L_RRoutingH, FileName, F_GetDesc(), L_WorkCenterNo);
             AddMsgLine(StrSubstNo(LBL_NewRoutingH, FileName), L_OK);
@@ -98,34 +95,13 @@ codeunit 50002 "BOM Import Mgt. PTE"
 
         if RActivityLog."Record ID".TableNo = Database::Item then begin
             ClearLastError();
-            L_OK := F_ValidateItem(L_RItem, L_RBOM, L_RRoutingH);
+            L_OK := F_ValidateItem(Ritem, L_RBOM, L_RRoutingH);
             if not L_OK then
-                AddMsgLine('Impossibile assegnare distinta e ciclo ad articolo nr. ' + L_RItem."No.", false);
+                AddMsgLine('Impossibile assegnare distinta e ciclo ad articolo nr. ' + Ritem."No.", false);
         end;
         V_RActivityLog.Get(RActivityLog.ID);
         V_RActivityLog.Status := V_RActivityLog.Status::Success;
         V_RActivityLog.Modify();
-    end;
-
-    [TryFunction]
-    local procedure F_AddSKU(P_RVariant: Record "Item Variant"; var V_RSKU: Record "Stockkeeping Unit")
-    var
-        L_RItem: Record Item;
-    begin
-        if not V_RSKU.Get(CCEA.GetDefaultLocationCode, P_RVariant."Item No.", P_RVariant.Code) then begin
-            L_RItem.Get(P_RVariant."Item No.");
-            V_RSKU.Init();
-            V_RSKU.Validate("Location Code", CCEA.GetDefaultLocationCode());
-            V_RSKU.Validate("Item No.", P_RVariant."Item No.");
-            V_RSKU.Validate("Variant Code", P_RVariant.Code);
-            V_RSKU.Insert(true);
-            // flowfield L_RSKU.Validate(Description, F_GetDesc());
-            V_RSKU.CopyFromItem(L_RItem);
-        end;
-        V_RSKU.Validate("Replenishment System", V_RSKU."Replenishment System"::"Prod. Order");
-        V_RSKU.Validate("Production BOM No.", FileName);
-        V_RSKU.Validate("Routing No.", FileName);
-        V_RSKU.Modify(true);
     end;
 
     local procedure InitImportBOMLog();
@@ -139,7 +115,7 @@ codeunit 50002 "BOM Import Mgt. PTE"
         RActivityLog.Context := GETImportBOMContext;
         RActivityLog.Description := FileName;
         RActivityLog."Activity Message" := '';
-        RActivityLog."Table No Filter" := Database::"Item";
+        RActivityLog."Table No Filter" := Database::Item;
         RActivityLog.Insert(true);
         Commit;
     end;
@@ -181,8 +157,6 @@ codeunit 50002 "BOM Import Mgt. PTE"
         L_RUM: Record "Unit of Measure";
         L_Key: Integer;
         L_Debug: Boolean;
-        L_BOnlyMP: Boolean;
-        L_Deleted: Boolean;
     begin
         //  1   N°                        Order
         //  2   T - Articolo distinta     Code01
@@ -214,6 +188,7 @@ codeunit 50002 "BOM Import Mgt. PTE"
                 L_TempLines.Insert;
                 L_TempLines.Int10 := V_CSVBuffer."Line No.";
             end;
+            // TODO : rivedere le colonne
             case V_CSVBuffer."Field No." of
                 1:
                     L_TempLines.Order := V_CSVBuffer.Value;
@@ -226,7 +201,7 @@ codeunit 50002 "BOM Import Mgt. PTE"
                         L_TempLines.Code03 := V_CSVBuffer.Value
                     else begin
                         AddMsgLine('"UM"  non riconosciuto in riga ' + Format(V_CSVBuffer."Line No."), true);
-                        L_TempLines.Code03 := CCEA.GetDefalutUM();
+                        L_TempLines.Code03 := CCEA.GetDefalutUM(); // CHECK DA eliminare?
                     end;
 
                 5:
@@ -280,92 +255,60 @@ codeunit 50002 "BOM Import Mgt. PTE"
         if not L_TempLines.FindSet() then
             exit(false);
         repeat
-            L_Deleted := false;
             if StrLen(L_TempLines.Code02) > 20 then begin
                 AddMsgLine(StrSubstNo(Lbl_Err2, Format(L_TempLines.Int10), L_TempLines.Code02), true);
                 L_TempLines.Delete();
-                L_Deleted := true;
             end;
-            // ordine produzione & conto lavoro & MP_Nr. = ''
-            if (L_TempLines.Opt01 = 1) and (L_TempLines.Code04 <> 'CL') and (L_TempLines.Code06 = '') and (not L_Deleted) then
-                L_TempLines.Delete();
         until L_TempLines.Next() = 0;
         L_TempLines.FindSet();
         L_Key := 1;
         RInventorySetup.SetLoadFields("Default Costing Method");
         RInventorySetup.Get();
         repeat
-            // se ordine di produzione e non conto lavoro -->
-            // non devo importare l'articolo e la riga di distinta ma devo importare la materia prima
-            if (L_TempLines.Opt01 = 1) and (L_TempLines.Code04 <> 'CL') then
-                L_BOnlyMP := true
-            else
-                L_BOnlyMP := false;
-            if not L_BOnlyMP then begin
+
+            V_TempLines.Reset();
+            V_TempLines.SetRange(Code02, L_TempLines.Code02);
+            V_TempLines.SetRange(Code03, L_TempLines.Code03);
+            if not V_TempLines.FindFirst() then begin
+                V_TempLines.Init();
+                V_TempLines.AddRecord(L_Key);
+                V_TempLines.Order := L_TempLines.Order;
+                V_TempLines.Code01 := '';
+                V_TempLines.Code02 := L_TempLines.Code02;
+                V_TempLines.Code03 := L_TempLines.Code03;
+                V_TempLines.Text01 := L_TempLines.Text01;
+                V_TempLines.Opt01 := L_TempLines.Opt01;
+                V_TempLines.Code04 := L_TempLines.Code04;
+                V_TempLines.Code05 := L_TempLines.Code05;
+                V_TempLines.Bool01 := L_TempLines.Bool01;
+                V_TempLines.Bool02 := L_TempLines.Bool02;
+                V_TempLines.Num01 := L_TempLines.Num01;
+                F_CheckItemUpdate(V_TempLines);
+            end else begin
+                V_TempLines.Num01 += L_TempLines.Num01;
+                V_TempLines.Modify();
+            end;
+            V_TempLines.Modify();
+            //materia prima
+            if F_CheckItemMateriaPrima(L_TempLines) then begin
+                // V_TempLines.Code01 = distinta articolo importato
                 V_TempLines.Reset();
-                V_TempLines.SetRange(Code02, L_TempLines.Code02);
-                V_TempLines.SetRange(Code03, L_TempLines.Code03);
+                V_TempLines.SetRange(Code02, L_TempLines.Code06);
+                V_TempLines.SetRange(Code03, L_TempLines.Code07);
                 if not V_TempLines.FindFirst() then begin
                     V_TempLines.Init();
                     V_TempLines.AddRecord(L_Key);
                     V_TempLines.Order := L_TempLines.Order;
                     V_TempLines.Code01 := '';
-                    V_TempLines.Code02 := L_TempLines.Code02;
-                    V_TempLines.Code03 := L_TempLines.Code03;
-                    V_TempLines.Text01 := L_TempLines.Text01;
-                    V_TempLines.Opt01 := L_TempLines.Opt01;
-                    V_TempLines.Code04 := L_TempLines.Code04;
-                    V_TempLines.Code05 := L_TempLines.Code05;
-                    V_TempLines.Bool01 := L_TempLines.Bool01;
-                    V_TempLines.Bool02 := L_TempLines.Bool02;
-                    V_TempLines.Num01 := L_TempLines.Num01;
-                    F_CheckItemUpdate(V_TempLines);
-                end else begin
-                    V_TempLines.Num01 += L_TempLines.Num01;
+                    V_TempLines.Code02 := L_TempLines.Code06;
+                    V_TempLines.Code03 := L_TempLines.Code07;
+                    V_TempLines.Code04 := CCEA.GetDefaultMPItemCategoryCode;
+                    V_TempLines.Text01 := L_TempLines.Text02;
+                    V_TempLines.Num01 := (L_TempLines.Num01 * L_TempLines.Num02); //Qty per * Peso
                     V_TempLines.Modify();
-                end;
-                V_TempLines.Modify();
-            end;
-            //materia prima
-            if F_CheckItemMateriaPrima(L_TempLines) then begin
-                // conto lavoro
-                // V_TempLines.Code01 = nuova distinta
-                if L_TempLines.Code04 = 'CL' then begin
-                    V_TempLines.Reset();
-                    V_TempLines.SetRange(Code01, L_TempLines.Code02);
-                    if not V_TempLines.FindFirst() then begin
-                        V_TempLines.Init();
-                        V_TempLines.AddRecord(L_Key);
-                        V_TempLines.Order := L_TempLines.Order;
-                        V_TempLines.Code01 := L_TempLines.Code02;
-                        V_TempLines.Code02 := L_TempLines.Code06;
-                        V_TempLines.Code03 := L_TempLines.Code07;
-                        V_TempLines.Code04 := 'MP';
-                        V_TempLines.Text01 := L_TempLines.Text02;
-                        V_TempLines.Num01 := L_TempLines.Num02;
-                        V_TempLines.Modify();
-                    end;
                 end else begin
-                    // artcoli materia prima normali
-                    // V_TempLines.Code01 = distinta articolo importato
-                    V_TempLines.Reset();
-                    V_TempLines.SetRange(Code02, L_TempLines.Code06);
-                    V_TempLines.SetRange(Code03, L_TempLines.Code07);
-                    if not V_TempLines.FindFirst() then begin
-                        V_TempLines.Init();
-                        V_TempLines.AddRecord(L_Key);
-                        V_TempLines.Order := L_TempLines.Order;
-                        V_TempLines.Code01 := '';
-                        V_TempLines.Code02 := L_TempLines.Code06;
-                        V_TempLines.Code03 := L_TempLines.Code07;
-                        V_TempLines.Code04 := 'MP';
-                        V_TempLines.Text01 := L_TempLines.Text02;
-                        V_TempLines.Num01 := (L_TempLines.Num01 * L_TempLines.Num02); //Qty per * Peso
-                        V_TempLines.Modify();
-                    end else begin
-                        V_TempLines.Num01 += (L_TempLines.Num01 * L_TempLines.Num02); //Qty per * Peso
-                        V_TempLines.Modify();
-                    end;
+                    V_TempLines.Num01 += (L_TempLines.Num01 * L_TempLines.Num02); //Qty per * Peso
+                    V_TempLines.Modify();
                 end;
             end;
         until L_TempLines.Next = 0;
@@ -414,12 +357,12 @@ codeunit 50002 "BOM Import Mgt. PTE"
         V_RRoutingH.Validate(Description, CopyStr(P_Desc, 1, MaxStrLen(V_RRoutingH.Description)));
         V_RRoutingH.Modify();
         L_RRoutingL."Routing No." := V_RRoutingH."No.";
-        L_RRoutingL."Operation No." := CCEA.GetDefaultOperationNo;
+        L_RRoutingL."Operation No." := CCEA.GetDefaultOperationNo; // CHECK DA eliminare?
         L_RRoutingL.Insert(false);
         L_RRoutingL.Validate(Type, L_RRoutingL.Type::"Work Center");
         if P_WorkCenter <> '' then
             L_RRoutingL.Validate("No.", P_WorkCenter);
-        L_RRoutingL.Validate("Routing Link Code", CCEA.GetDefalutRoutingLink());
+        L_RRoutingL.Validate("Routing Link Code", CCEA.GetDefalutRoutingLink()); // CHECK DA eliminare?
         L_RRoutingL.Modify(false);
     end;
 
@@ -433,12 +376,6 @@ codeunit 50002 "BOM Import Mgt. PTE"
                 begin
                     RActivityLog."Record ID".GetRecord.SetTable(L_RItem);
                     O_Code := L_RItem."Base Unit of Measure";
-                end;
-            Database::"Item Variant":
-                begin
-                    RActivityLog."Record ID".GetRecord.SetTable(L_RVariant);
-                    if L_RItem.Get(L_RVariant."Item No.") then
-                        O_Code := L_RItem."Base Unit of Measure";
                 end;
         end;
         if O_Code = '' then
@@ -490,7 +427,7 @@ codeunit 50002 "BOM Import Mgt. PTE"
         end;
         ClearLastError();
         // materia prima non aggiorno la descrizione
-        if P_TempLines.Code04 <> 'MP' then begin
+        if P_TempLines.Code04 <> CCEA.GetDefaultMPItemCategoryCode then begin
             L_Text := L_RItem.Description;
             L_OK := F_UpdateItem(P_TempLines, L_RItem);
             if (not L_OK) or (L_Text <> P_TempLines.Text01) then
@@ -717,7 +654,7 @@ codeunit 50002 "BOM Import Mgt. PTE"
     begin
         if P_RBomLine."No." <> P_TempLines.Code02 then
             exit(true);
-        if P_TempLines.Code03 <> 'MP' then
+        if P_TempLines.Code03 <> CCEA.GetDefaultMPItemCategoryCode then
             if P_RBomLine.Description <> P_TempLines.Text01 then
                 exit(true);
         if P_RBomLine."Quantity per" <> P_TempLines.Num01 then
@@ -740,7 +677,7 @@ codeunit 50002 "BOM Import Mgt. PTE"
             V_RBomLine.Validate("Unit of Measure Code", P_TempLines.Code03);
             L_BValidate := true;
         end;
-        if P_TempLines.Code03 <> 'MP' then
+        if P_TempLines.Code03 <> CCEA.GetDefaultMPItemCategoryCode then
             if V_RBomLine.Description <> P_TempLines.Text01 then
                 V_RBomLine.Validate(Description, CopyStr(P_TempLines.Text01, 1, MaxStrLen(V_RBomLine.Description)));
         if (V_RBomLine."Quantity per" <> P_TempLines.Num01) or L_BValidate then

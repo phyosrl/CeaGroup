@@ -13,7 +13,7 @@ page 50006 DimensioniAPI2
 
     layout
     {
-        area(content)
+        area(Content)
         {
             repeater(General)
             {

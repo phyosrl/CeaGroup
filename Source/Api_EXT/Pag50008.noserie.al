@@ -10,10 +10,10 @@ page 50008 noserie
     EntitySetName = 'noserie';
     PageType = API;
     SourceTable = "No. Series Line";
-    
+
     layout
     {
-        area(content)
+        area(Content)
         {
             repeater(General)
             {

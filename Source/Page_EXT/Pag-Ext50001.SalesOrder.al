@@ -1,4 +1,4 @@
-pageextension 50001 "Sales Order_Ext" extends "Sales Order"
+pageextension 50001 "Sales Order PTE" extends "Sales Order"
 {
     layout
     {
@@ -6,12 +6,20 @@ pageextension 50001 "Sales Order_Ext" extends "Sales Order"
         {
             group(CeaGroup)
             {
+
                 Caption = 'Cea Group', Locked = true;
-                field("ProjectDesc"; Rec."Project Desc PTE")
+                field(DimName; DimName)
+                {
+                    Caption = 'Nome Commessa', Locked = true;
+                    Editable = false;
+                    ApplicationArea = All;
+                }
+
+                field("Desc. Progetto"; Rec."Desc. Progetto PTE")
                 {
                     ApplicationArea = All;
                 }
-                field("Disegno"; Rec."Disegno PTE")
+                field(Disegno; Rec."Disegno PTE")
                 {
                     ApplicationArea = All;
                 }
@@ -22,22 +30,22 @@ pageextension 50001 "Sales Order_Ext" extends "Sales Order"
             }
         }
 
-        movebefore(ProjectDesc; "Shortcut Dimension 1 Code")
+        movebefore(DimName; "Shortcut Dimension 1 Code")
         moveafter("Shortcut Dimension 1 Code"; "Shortcut Dimension 2 Code")
         modify("Shortcut Dimension 1 Code")
         {
             trigger OnLookup(var Text: Text) Ok: Boolean;
             var
-                L_RDimValue: record "Dimension Value";
-                L_Page: page "Dimension Values";
+                L_RDimValue: Record "Dimension Value";
+                L_Page: Page "Dimension Values";
                 L_Action: Action;
-                L_RGenLedSetup: record "General Ledger Setup";
+                L_RGenLedSetup: Record "General Ledger Setup";
             begin
-                if rec."No." = '' then
+                if Rec."No." = '' then
                     exit;
-                L_RGenLedSetup.GET();
+                L_RGenLedSetup.Get();
                 L_RDimValue.FilterGroup(10);
-                L_RDimValue.SETRANGE("Dimension Code", L_RGenLedSetup."Global Dimension 1 Code");
+                L_RDimValue.SetRange("Dimension Code", L_RGenLedSetup."Global Dimension 1 Code");
                 L_RDimValue.FilterGroup(0);
                 L_Page.SetTableView(L_RDimValue);
                 L_Page.SetDimCode(L_RGenLedSetup."Global Dimension 1 Code");
@@ -46,24 +54,30 @@ pageextension 50001 "Sales Order_Ext" extends "Sales Order"
                 L_Action := L_Page.RunModal;
                 if L_Action in [Action::LookupOK, Action::OK, Action::Yes] then begin
                     L_Page.GetRecord(L_RDimValue);
-                    rec.Validate("Shortcut Dimension 1 Code", L_RDimValue.Code);
+                    Rec.Validate("Shortcut Dimension 1 Code", L_RDimValue.Code);
                 end;
+                CalcDimName;
+            end;
+
+            trigger OnAfterValidate()
+            begin
+                CalcDimName;
             end;
         }
         modify("Shortcut Dimension 2 Code")
         {
             trigger OnLookup(var Text: Text) Ok: Boolean;
             var
-                L_RDimValue: record "Dimension Value";
-                L_Page: page "Dimension Values";
+                L_RDimValue: Record "Dimension Value";
+                L_Page: Page "Dimension Values";
                 L_Action: Action;
-                L_RGenLedSetup: record "General Ledger Setup";
+                L_RGenLedSetup: Record "General Ledger Setup";
             begin
-                if rec."No." = '' then
+                if Rec."No." = '' then
                     exit;
-                L_RGenLedSetup.GET();
+                L_RGenLedSetup.Get();
                 L_RDimValue.FilterGroup(10);
-                L_RDimValue.SETRANGE("Dimension Code", L_RGenLedSetup."Global Dimension 2 Code");
+                L_RDimValue.SetRange("Dimension Code", L_RGenLedSetup."Global Dimension 2 Code");
                 L_RDimValue.FilterGroup(0);
                 L_Page.SetTableView(L_RDimValue);
                 L_Page.SetDimCode(L_RGenLedSetup."Global Dimension 2 Code");
@@ -72,9 +86,30 @@ pageextension 50001 "Sales Order_Ext" extends "Sales Order"
                 L_Action := L_Page.RunModal;
                 if L_Action in [Action::LookupOK, Action::OK, Action::Yes] then begin
                     L_Page.GetRecord(L_RDimValue);
-                    rec.Validate("Shortcut Dimension 2 Code", L_RDimValue.Code);
+                    Rec.Validate("Shortcut Dimension 2 Code", L_RDimValue.Code);
                 end;
+            end;
+
+            trigger OnAfterValidate()
+            begin
+                CalcDimName;
             end;
         }
     }
+    trigger OnAfterGetRecord()
+    begin
+        CalcDimName;
+    end;
+
+    local procedure CalcDimName()
+    begin
+        if RDimValue.Get(Rec."Shortcut Dimension 1 Code", Rec."Shortcut Dimension 2 Code") then
+            DimName := RDimValue.Name
+        else
+            DimName := '';
+    end;
+
+    var
+        RDimValue: Record "Dimension Value";
+        DimName: Text;
 }

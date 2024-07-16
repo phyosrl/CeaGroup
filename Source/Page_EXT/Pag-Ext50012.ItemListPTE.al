@@ -1,5 +1,15 @@
 pageextension 50012 "Item List PTE" extends "Item List"
 {
+    layout
+    {
+        addafter("Description 2")
+        {
+            field("Materiale PTE"; Rec."Materiale PTE")
+            {
+                ApplicationArea = All;
+            }
+        }
+    }
     actions
     {
         addafter("Item Refe&rences")
