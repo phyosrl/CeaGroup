@@ -6,17 +6,16 @@ pageextension 50001 "Sales Order_Ext" extends "Sales Order"
         {
             group(CeaGroup)
             {
-                Caption = 'CeaGroup', Locked = true;
-                field("ProjectDesc"; Rec."Project Desc")
-                {
-                    ApplicationArea = All;
-                    Caption = 'Descrizione Progetto', Locked = true;
-                }
-                field("Disegno"; Rec."Disegno")
+                Caption = 'Cea Group', Locked = true;
+                field("ProjectDesc"; Rec."Project Desc PTE")
                 {
                     ApplicationArea = All;
                 }
-                field("Manager Vendite"; Rec."Manager Vendite")
+                field("Disegno"; Rec."Disegno PTE")
+                {
+                    ApplicationArea = All;
+                }
+                field("Manager Vendite"; Rec."Manager Vendite PTE")
                 {
                     ApplicationArea = All;
                 }

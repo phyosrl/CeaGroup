@@ -8,16 +8,16 @@ pageextension 50000 "Sales Quote_Ext" extends "Sales Quote"
             {
                 Caption = 'CeaGroup', Locked = true;
 
-                field("ProjectDesc"; Rec."Project Desc")
+                field("ProjectDesc"; Rec."Project Desc PTE")
                 {
                     ApplicationArea = All;
                     Caption = 'Descrizione Progetto', Locked = true;
                 }
-                field("Disegno"; Rec."Disegno")
+                field("Disegno"; Rec."Disegno PTE")
                 {
                     ApplicationArea = All;
                 }
-                field("Manager Vendite"; Rec."Manager Vendite")
+                field("Manager Vendite"; Rec."Manager Vendite PTE")
                 {
                     ApplicationArea = All;
                 }

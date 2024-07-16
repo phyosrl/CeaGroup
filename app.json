@@ -10,7 +10,18 @@
   "help": "",
   "url": "",
   "logo": "",
-  "dependencies": [],
+  "dependencies": [{
+    "id": "7c3cc748-4234-4072-9e67-ac6849105ad9",
+    "name": "Flex EI",
+    "publisher": "Divimast Srl",
+    "version": "1.0.17.0"
+  },
+  {
+    "id": "638d9283-1257-4721-8210-d7373d70dbbd",
+    "name": "Flex Starter",
+    "publisher": "Divimast Srl",
+    "version": "1.0.27.0"
+  }],
   "screenshots": [],
   "platform": "1.0.0.0",
   "application": "24.0.0.0",
@@ -19,7 +30,7 @@
       "from": 50000,
       "to": 50900
     }
-  ],
+  ],  
   "resourceExposurePolicy": {
     "allowDebugging": true,
     "allowDownloadingSource": true,
