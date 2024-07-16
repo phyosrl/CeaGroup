@@ -24,16 +24,16 @@ pageextension 50005 "Job Card_PTE" extends "Job Card"
                         CurrPage.Update();
                     end;
                 }
-                field("ProjectDesc"; Rec."Project Desc")
+                field("ProjectDesc"; Rec."Project Desc PTE")
                 {
                     ApplicationArea = All;
                     Caption = 'Descrizione Progetto', Locked = true;
                 }
-                field("Disegno"; Rec."Disegno")
+                field("Disegno"; Rec."Disegno PTE")
                 {
                     ApplicationArea = All;
                 }
-                field("Manager Vendite"; Rec."Manager Vendite")
+                field("Manager Vendite"; Rec."Manager Vendite PTE")
                 {
                     ApplicationArea = All;
                 }

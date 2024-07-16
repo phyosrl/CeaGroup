@@ -4,7 +4,7 @@ tableextension 50002 "Item PTE" extends Item
     {
         field(50000; "Material PTE"; Text[200])
         {
-            Caption = 'Material PTE';
+            Caption = 'Materiale';
             DataClassification = CustomerContent;
         }
     }
