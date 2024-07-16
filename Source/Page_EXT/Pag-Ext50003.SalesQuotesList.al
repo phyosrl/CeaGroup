@@ -1,4 +1,4 @@
-pageextension 50003 "Sales Quotes List_EXT" extends "Sales Quotes"
+pageextension 50003 "Sales Quotes List PTE" extends "Sales Quotes"
 {
     layout
     {
@@ -8,21 +8,26 @@ pageextension 50003 "Sales Quotes List_EXT" extends "Sales Quotes"
             {
                 ApplicationArea = All;
             }
-            field("Commessa"; Rec."Shortcut Dimension 2 Code")
+            field(Commessa; Rec."Shortcut Dimension 2 Code")
             {
+                ApplicationArea = All;
+            }
+            field(DimName; DimName)
+            {
+                Caption = 'Nome Commessa', Locked = true;
+                Editable = false;
                 ApplicationArea = All;
             }
 
         }
         addafter("No.")
         {
-            field("Project Desc"; Rec."Project Desc PTE")
+            field("Project Desc"; Rec."Desc. Progetto PTE")
             {
                 ApplicationArea = All;
                 Editable = false;
-                Caption = 'Descrizione Progetto';
             }
-            field("Disegno"; Rec."Disegno PTE")
+            field(Disegno; Rec."Disegno PTE")
             {
                 ApplicationArea = All;
             }
@@ -30,7 +35,17 @@ pageextension 50003 "Sales Quotes List_EXT" extends "Sales Quotes"
             {
                 ApplicationArea = All;
             }
-
         }
     }
+    trigger OnAfterGetRecord()
+    begin
+        if RDimValue.Get(Rec."Shortcut Dimension 1 Code", Rec."Shortcut Dimension 2 Code") then
+            DimName := RDimValue.Name
+        else
+            DimName := '';
+    end;
+
+    var
+        RDimValue: Record "Dimension Value";
+        DimName: Text;
 }

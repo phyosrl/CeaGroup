@@ -13,7 +13,7 @@ page 50011 regrisorse
 
     layout
     {
-        area(content)
+        area(Content)
         {
             repeater(General)
             {

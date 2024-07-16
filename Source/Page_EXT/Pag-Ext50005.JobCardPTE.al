@@ -1,4 +1,4 @@
-pageextension 50005 "Job Card_PTE" extends "Job Card"
+pageextension 50005 "Job Card PTE" extends "Job Card"
 {
     layout
     {
@@ -6,7 +6,7 @@ pageextension 50005 "Job Card_PTE" extends "Job Card"
         {
             group(CeaGroup)
             {
-                Caption = 'CeaGroup', Locked = true;
+                Caption = 'Cea Group', Locked = true;
                 field("Global Dimension 1 Code"; Rec."Global Dimension 1 Code")
                 {
                     ApplicationArea = All;
@@ -24,12 +24,11 @@ pageextension 50005 "Job Card_PTE" extends "Job Card"
                         CurrPage.Update();
                     end;
                 }
-                field("ProjectDesc"; Rec."Project Desc PTE")
+                field(ProjectDesc; Rec."Desc. Progetto PTE")
                 {
                     ApplicationArea = All;
-                    Caption = 'Descrizione Progetto', Locked = true;
                 }
-                field("Disegno"; Rec."Disegno PTE")
+                field(Disegno; Rec."Disegno PTE")
                 {
                     ApplicationArea = All;
                 }

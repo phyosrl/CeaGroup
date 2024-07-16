@@ -13,7 +13,7 @@ page 50009 noserie2
 
     layout
     {
-        area(content)
+        area(Content)
         {
             repeater(General)
             {

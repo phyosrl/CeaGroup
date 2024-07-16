@@ -13,7 +13,7 @@ page 50010 regcap
 
     layout
     {
-        area(content)
+        area(Content)
         {
             repeater(General)
             {
