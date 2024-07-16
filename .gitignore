@@ -1,0 +1,8 @@
+.alpackages/
+.alcache/
+*.app
+.vscode/
+.snapshots/
+Ruleset/
+.netpackages/
+*.g.xlf
