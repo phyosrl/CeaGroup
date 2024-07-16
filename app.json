@@ -1,8 +1,8 @@
 {
-  "id": "f9506e8e-68bb-4517-82fb-6f5d9865d0ff",
-  "name": "Cea Gruop",
-  "publisher": "Cea Gruop Srl",
-  "version": "1.0.0.0",
+  "id": "e7a45ec6-3a39-4dc7-aa68-7649a42c3182",
+  "name": "CeaGroup_App_Phyo",
+  "publisher": "Phyo Srl",
+  "version": "1.1.0.24",
   "brief": "",
   "description": "App personalizzazioni per ",
   "privacyStatement": "",
@@ -16,8 +16,8 @@
   "application": "24.0.0.0",
   "idRanges": [
     {
-      "from": 50100,
-      "to": 50149
+      "from": 50000,
+      "to": 50900
     }
   ],
   "resourceExposurePolicy": {
