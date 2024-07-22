@@ -48,4 +48,10 @@ codeunit 50000 "CEA General PTE"
     begin
         exit('MP');
     end;
+
+    procedure GetDefaultItemCategoryCode(): Text[10]
+    // articolo per articoli conto lavoro
+    begin
+        exit('IT');
+    end;
 }
