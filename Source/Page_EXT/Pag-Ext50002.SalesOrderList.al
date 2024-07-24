@@ -26,7 +26,7 @@ pageextension 50002 "Sales Order List PTE" extends "Sales Order List"
                 ApplicationArea = All;
                 Editable = false;
             }
-            field(Disegno; Rec."Disegno")
+            field(Disegno; Rec.Disegno)
             {
                 ApplicationArea = All;
             }

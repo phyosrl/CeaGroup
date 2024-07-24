@@ -28,7 +28,7 @@ pageextension 50005 "Job Card PTE" extends "Job Card"
                 {
                     ApplicationArea = All;
                 }
-                field(Disegno; Rec."Disegno")
+                field(Disegno; Rec.Disegno)
                 {
                     ApplicationArea = All;
                 }

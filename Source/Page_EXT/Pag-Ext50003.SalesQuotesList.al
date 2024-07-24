@@ -27,7 +27,7 @@ pageextension 50003 "Sales Quotes List PTE" extends "Sales Quotes"
                 ApplicationArea = All;
                 Editable = false;
             }
-            field(Disegno; Rec."Disegno")
+            field(Disegno; Rec.Disegno)
             {
                 ApplicationArea = All;
             }

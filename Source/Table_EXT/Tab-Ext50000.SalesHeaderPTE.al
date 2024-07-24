@@ -7,7 +7,7 @@ tableextension 50000 "Sales Header PTE" extends "Sales Header"
             Caption = 'Descrizione Progetto', Locked = true;
             DataClassification = CustomerContent;
         }
-        field(50001; "Disegno"; Text[200])
+        field(50001; Disegno; Text[200])
         {
             Caption = 'Disegno', Locked = true;
             DataClassification = CustomerContent;

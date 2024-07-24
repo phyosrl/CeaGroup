@@ -47,7 +47,6 @@ pageextension 50012 "Item List PTE" extends "Item List"
                 var
                     L_RLog: Record "Activity Log";
                     L_CCode: Codeunit "BOM Import Mgt. PTE";
-                    L_Instream: InStream;
                     L_Content: Text;
                     L_FileName: Text;
                     L_Text: Text;
