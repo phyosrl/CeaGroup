@@ -24,15 +24,15 @@ pageextension 50005 "Job Card PTE" extends "Job Card"
                         CurrPage.Update();
                     end;
                 }
-                field(ProjectDesc; Rec."Desc. Progetto PTE")
+                field(ProjectDesc; Rec."Project Desc")
                 {
                     ApplicationArea = All;
                 }
-                field(Disegno; Rec."Disegno PTE")
+                field(Disegno; Rec."Disegno")
                 {
                     ApplicationArea = All;
                 }
-                field("Manager Vendite"; Rec."Manager Vendite PTE")
+                field("Manager Vendite"; Rec."Manager Vendite")
                 {
                     ApplicationArea = All;
                 }

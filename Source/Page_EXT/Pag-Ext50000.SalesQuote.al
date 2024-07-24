@@ -15,15 +15,15 @@ pageextension 50000 "Sales Quote PTE" extends "Sales Quote"
                     Editable = false;
                     ApplicationArea = All;
                 }
-                field("Desc. Progetto"; Rec."Desc. Progetto PTE")
+                field("Desc. Progetto"; Rec."Project Desc")
                 {
                     ApplicationArea = All;
                 }
-                field(Disegno; Rec."Disegno PTE")
+                field(Disegno; Rec."Disegno")
                 {
                     ApplicationArea = All;
                 }
-                field("Manager Vendite"; Rec."Manager Vendite PTE")
+                field("Manager Vendite"; Rec."Manager Vendite")
                 {
                     ApplicationArea = All;
                 }
