@@ -932,7 +932,6 @@ codeunit 50002 "BOM Import Mgt. PTE"
         B_OK := Codeunit.Run(Codeunit::"BOM Import Mgt. PTE", TempRec);
         if B_OK then
             V_RBomLine.Get(V_RBomLine."Production BOM No.", V_RBomLine."Version Code", V_RBomLine."Line No.");
-
     end;
 
     local procedure F_CreateBOML(var V_Rec: Record "FLEX Work File FLE" temporary);
@@ -950,5 +949,6 @@ codeunit 50002 "BOM Import Mgt. PTE"
         L_RBomLine.Modify();
     end;
 
-
+    // verificare come gestire multeplici righe 
+    // verificare come gestire l'adattamento del nr di serie
 }

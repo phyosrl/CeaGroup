@@ -15,16 +15,16 @@ pageextension 50006 "Job List PTE" extends "Job List"
         }
         addafter("No.")
         {
-            field("Project Desc"; Rec."Desc. Progetto PTE")
+            field("Project Desc"; Rec."Project Desc")
             {
                 ApplicationArea = All;
                 Editable = false;
             }
-            field(Disegno; Rec."Disegno PTE")
+            field(Disegno; Rec."Disegno")
             {
                 ApplicationArea = All;
             }
-            field("Manager Vendite"; Rec."Manager Vendite PTE")
+            field("Manager Vendite"; Rec."Manager Vendite")
             {
                 ApplicationArea = All;
             }

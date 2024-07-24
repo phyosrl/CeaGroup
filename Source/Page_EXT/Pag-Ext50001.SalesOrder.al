@@ -15,15 +15,15 @@ pageextension 50001 "Sales Order PTE" extends "Sales Order"
                     ApplicationArea = All;
                 }
 
-                field("Desc. Progetto"; Rec."Desc. Progetto PTE")
+                field("Desc. Progetto"; Rec."Project Desc")
                 {
                     ApplicationArea = All;
                 }
-                field(Disegno; Rec."Disegno PTE")
+                field(Disegno; Rec."Disegno")
                 {
                     ApplicationArea = All;
                 }
-                field("Manager Vendite"; Rec."Manager Vendite PTE")
+                field("Manager Vendite"; Rec."Manager Vendite")
                 {
                     ApplicationArea = All;
                 }
