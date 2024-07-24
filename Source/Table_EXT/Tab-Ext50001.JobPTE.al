@@ -7,7 +7,7 @@ tableextension 50001 "Job PTE" extends Job
             Caption = 'Descrizione Progetto', Locked = true;
             DataClassification = CustomerContent;
         }
-        field(50001; "Disegno"; Text[200])
+        field(50001; Disegno; Text[200])
         {
             Caption = 'Disegno', Locked = true;
             DataClassification = CustomerContent;

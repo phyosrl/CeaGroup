@@ -19,7 +19,7 @@ pageextension 50001 "Sales Order PTE" extends "Sales Order"
                 {
                     ApplicationArea = All;
                 }
-                field(Disegno; Rec."Disegno")
+                field(Disegno; Rec.Disegno)
                 {
                     ApplicationArea = All;
                 }

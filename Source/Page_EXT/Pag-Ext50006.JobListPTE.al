@@ -20,7 +20,7 @@ pageextension 50006 "Job List PTE" extends "Job List"
                 ApplicationArea = All;
                 Editable = false;
             }
-            field(Disegno; Rec."Disegno")
+            field(Disegno; Rec.Disegno)
             {
                 ApplicationArea = All;
             }

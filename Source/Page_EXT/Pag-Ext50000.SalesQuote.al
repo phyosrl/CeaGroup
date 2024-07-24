@@ -19,7 +19,7 @@ pageextension 50000 "Sales Quote PTE" extends "Sales Quote"
                 {
                     ApplicationArea = All;
                 }
-                field(Disegno; Rec."Disegno")
+                field(Disegno; Rec.Disegno)
                 {
                     ApplicationArea = All;
                 }
