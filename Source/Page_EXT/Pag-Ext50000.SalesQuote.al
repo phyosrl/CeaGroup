@@ -11,9 +11,9 @@ pageextension 50000 "Sales Quote PTE" extends "Sales Quote"
 
                 field(DimName; DimName)
                 {
+                    ApplicationArea = All;
                     Caption = 'Nome Commessa', Locked = true;
                     Editable = false;
-                    ApplicationArea = All;
                 }
                 field("Desc. Progetto"; Rec."Project Desc")
                 {
@@ -34,12 +34,18 @@ pageextension 50000 "Sales Quote PTE" extends "Sales Quote"
         moveafter("Shortcut Dimension 1 Code"; "Shortcut Dimension 2 Code")
         modify("Shortcut Dimension 1 Code")
         {
+
+            trigger OnAfterValidate()
+            begin
+                CalcDimName();
+            end;
+
             trigger OnLookup(var Text: Text) Ok: Boolean;
             var
                 L_RDimValue: Record "Dimension Value";
+                L_RGenLedSetup: Record "General Ledger Setup";
                 L_Page: Page "Dimension Values";
                 L_Action: Action;
-                L_RGenLedSetup: Record "General Ledger Setup";
             begin
                 if Rec."No." = '' then
                     exit;
@@ -58,20 +64,21 @@ pageextension 50000 "Sales Quote PTE" extends "Sales Quote"
                 end;
                 CalcDimName;
             end;
-
-            trigger OnAfterValidate()
-            begin
-                CalcDimName();
-            end;
         }
         modify("Shortcut Dimension 2 Code")
         {
+
+            trigger OnAfterValidate()
+            begin
+                CalcDimName;
+            end;
+
             trigger OnLookup(var Text: Text) Ok: Boolean;
             var
                 L_RDimValue: Record "Dimension Value";
+                L_RGenLedSetup: Record "General Ledger Setup";
                 L_Page: Page "Dimension Values";
                 L_Action: Action;
-                L_RGenLedSetup: Record "General Ledger Setup";
             begin
                 if Rec."No." = '' then
                     exit;
@@ -91,17 +98,16 @@ pageextension 50000 "Sales Quote PTE" extends "Sales Quote"
                 CalcDimName;
             end;
 
-            trigger OnAfterValidate()
-            begin
-                CalcDimName;
-            end;
-
         }
     }
     trigger OnAfterGetRecord()
     begin
         CalcDimName;
     end;
+
+    var
+        RDimValue: Record "Dimension Value";
+        DimName: Text;
 
     local procedure CalcDimName()
     begin
@@ -110,8 +116,4 @@ pageextension 50000 "Sales Quote PTE" extends "Sales Quote"
         else
             DimName := '';
     end;
-
-    var
-        RDimValue: Record "Dimension Value";
-        DimName: Text;
 }

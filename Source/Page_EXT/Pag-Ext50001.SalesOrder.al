@@ -10,9 +10,9 @@ pageextension 50001 "Sales Order PTE" extends "Sales Order"
                 Caption = 'Cea Group', Locked = true;
                 field(DimName; DimName)
                 {
+                    ApplicationArea = All;
                     Caption = 'Nome Commessa', Locked = true;
                     Editable = false;
-                    ApplicationArea = All;
                 }
 
                 field("Desc. Progetto"; Rec."Project Desc")
@@ -34,12 +34,18 @@ pageextension 50001 "Sales Order PTE" extends "Sales Order"
         moveafter("Shortcut Dimension 1 Code"; "Shortcut Dimension 2 Code")
         modify("Shortcut Dimension 1 Code")
         {
+
+            trigger OnAfterValidate()
+            begin
+                CalcDimName;
+            end;
+
             trigger OnLookup(var Text: Text) Ok: Boolean;
             var
                 L_RDimValue: Record "Dimension Value";
+                L_RGenLedSetup: Record "General Ledger Setup";
                 L_Page: Page "Dimension Values";
                 L_Action: Action;
-                L_RGenLedSetup: Record "General Ledger Setup";
             begin
                 if Rec."No." = '' then
                     exit;
@@ -58,20 +64,21 @@ pageextension 50001 "Sales Order PTE" extends "Sales Order"
                 end;
                 CalcDimName;
             end;
+        }
+        modify("Shortcut Dimension 2 Code")
+        {
 
             trigger OnAfterValidate()
             begin
                 CalcDimName;
             end;
-        }
-        modify("Shortcut Dimension 2 Code")
-        {
+
             trigger OnLookup(var Text: Text) Ok: Boolean;
             var
                 L_RDimValue: Record "Dimension Value";
+                L_RGenLedSetup: Record "General Ledger Setup";
                 L_Page: Page "Dimension Values";
                 L_Action: Action;
-                L_RGenLedSetup: Record "General Ledger Setup";
             begin
                 if Rec."No." = '' then
                     exit;
@@ -89,17 +96,16 @@ pageextension 50001 "Sales Order PTE" extends "Sales Order"
                     Rec.Validate("Shortcut Dimension 2 Code", L_RDimValue.Code);
                 end;
             end;
-
-            trigger OnAfterValidate()
-            begin
-                CalcDimName;
-            end;
         }
     }
     trigger OnAfterGetRecord()
     begin
         CalcDimName;
     end;
+
+    var
+        RDimValue: Record "Dimension Value";
+        DimName: Text;
 
     local procedure CalcDimName()
     begin
@@ -108,8 +114,4 @@ pageextension 50001 "Sales Order PTE" extends "Sales Order"
         else
             DimName := '';
     end;
-
-    var
-        RDimValue: Record "Dimension Value";
-        DimName: Text;
 }
