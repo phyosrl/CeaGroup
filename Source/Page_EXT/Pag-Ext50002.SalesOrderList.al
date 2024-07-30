@@ -14,9 +14,9 @@ pageextension 50002 "Sales Order List PTE" extends "Sales Order List"
             }
             field(DimName; DimName)
             {
+                ApplicationArea = All;
                 Caption = 'Nome Commessa', Locked = true;
                 Editable = false;
-                ApplicationArea = All;
             }
         }
         addafter("No.")

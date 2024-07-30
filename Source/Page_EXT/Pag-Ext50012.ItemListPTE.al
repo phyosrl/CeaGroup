@@ -16,13 +16,13 @@ pageextension 50012 "Item List PTE" extends "Item List"
         {
             action(ImportLog)
             {
+                ApplicationArea = All;
                 Caption = 'Log importazione BOM', Locked = true;
                 Image = Log;
-                ApplicationArea = All;
-                ToolTip = 'Visualizza i log di importazioni dei file per le distinte di produzione.', Locked = true;
-                PromotedIsBig = true;
                 Promoted = true;
                 PromotedCategory = Process;
+                PromotedIsBig = true;
+                ToolTip = 'Visualizza i log di importazioni dei file per le distinte di produzione.', Locked = true;
                 trigger OnAction()
                 var
                     L_Rec: Record "Activity Log";
@@ -36,13 +36,13 @@ pageextension 50012 "Item List PTE" extends "Item List"
             }
             action(ImportCSV)
             {
+                ApplicationArea = All;
                 Caption = 'Importa Distinta Base', Locked = true;
-                ToolTip = 'Importa una distita base di produzione da file esterno. Le modifiche vengono storicizzate in "Log importazione BOM"', Locked = true;
                 Image = ImportDatabase;
-                PromotedIsBig = true;
                 Promoted = true;
                 PromotedCategory = Process;
-                ApplicationArea = All;
+                PromotedIsBig = true;
+                ToolTip = 'Importa una distita base di produzione da file esterno. Le modifiche vengono storicizzate in "Log importazione BOM"', Locked = true;
                 trigger OnAction()
                 var
                     L_RLog: Record "Activity Log";

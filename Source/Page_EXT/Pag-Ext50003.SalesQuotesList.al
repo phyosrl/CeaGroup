@@ -14,9 +14,9 @@ pageextension 50003 "Sales Quotes List PTE" extends "Sales Quotes"
             }
             field(DimName; DimName)
             {
+                ApplicationArea = All;
                 Caption = 'Nome Commessa', Locked = true;
                 Editable = false;
-                ApplicationArea = All;
             }
 
         }
