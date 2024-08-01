@@ -802,6 +802,7 @@ codeunit 50002 "BOM Import Mgt. PTE"
         TempRec.Code04 := P_UM;
         TempRec.Text01 := P_Desc;
         TempRec.Num01 := P_Qty;
+        Commit();
         B_OK := Codeunit.Run(Codeunit::"BOM Import Mgt. PTE", TempRec);
         V_BModify := TempRec.Bool01;
         V_RBomLine.Get(TempRec.Code01, TempRec.Code02, TempRec.Int01);
