@@ -470,7 +470,6 @@ codeunit 50002 "BOM Import Mgt. PTE"
     local procedure AddItemENUTrnsl(P_RItem: Record Item; P_Text: Text)
     var
         L_RItemTransl: Record "Item Translation";
-        L_Des: Text;
     begin
         L_RItemTransl.SetRange("Item No.", P_RItem."No.");
         L_RItemTransl.SetRange("Language Code", 'ENU');
@@ -479,10 +478,8 @@ codeunit 50002 "BOM Import Mgt. PTE"
             L_RItemTransl."Language Code" := 'ENU';
             L_RItemTransl.Insert();
         end;
-        if StrLen(P_Text) > MaxStrLen(L_RItemTransl.Description) then
-            L_Des := CopyStr(P_Text, 1, MaxStrLen(L_RItemTransl.Description));
-        if L_RItemTransl.Description <> L_Des then begin
-            L_RItemTransl.Description := L_Des;
+        if L_RItemTransl.Description <> P_Text then begin
+            L_RItemTransl.Description := CopyStr(P_Text, 1, MaxStrLen(L_RItemTransl.Description));
             L_RItemTransl.Modify();
         end;
     end;
