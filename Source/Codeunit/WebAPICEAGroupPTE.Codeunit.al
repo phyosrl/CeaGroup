@@ -1,5 +1,7 @@
 codeunit 50001 "Web API CEAGroup PTE"
 {
+    var
+        CRLF: Text[2];
 
     procedure ImportBOMFromCSVText(P_CSV_Content: Text; P_CSV_FileContent: Text) Result: Text;
     var
@@ -21,12 +23,17 @@ codeunit 50001 "Web API CEAGroup PTE"
         end;
     end;
 
-    procedure POSTItemJLine(TemplateName: Code[10]; BatchName: Code[10]; LineNo: Integer);
+    procedure POSTItemJLine(TemplateName: Code[10]; BatchName: Code[10]; LineNo: Integer) O_Error: Text;
     var
         L_RItemJnl: Record "Item Journal Line";
     begin
+        CRLF[1] := 13;
+        CRLF[2] := 10;
+        ClearLastError();
         L_RItemJnl.Get(TemplateName, BatchName, LineNo);
         L_RItemJnl.SetRecFilter();
         Codeunit.Run(Codeunit::"Item Jnl.-Post Batch", L_RItemJnl);
+        if GetLastErrorText() <> '' then
+            O_Error := GetLastErrorText() + CRLF + GetLastErrorCallStack();
     end;
 }
