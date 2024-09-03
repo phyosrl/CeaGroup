@@ -10,6 +10,7 @@ codeunit 50001 "Web API CEAGroup PTE"
         L_CBlob: Codeunit "Temp Blob";
         L_Instream: InStream;
         L_Text: Text;
+        CHelper: Codeunit "Http helper FLE";
     begin
         L_CCode.ImportBOMFromCSVText(P_CSV_Content, true, P_CSV_FileContent, L_RLog);
         L_RLog.CalcFields(L_RLog."Detailed Info");
