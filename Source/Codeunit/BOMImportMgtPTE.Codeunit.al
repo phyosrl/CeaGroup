@@ -85,19 +85,18 @@ codeunit 50002 "BOM Import Mgt. PTE"
         L_OK: Boolean;
     begin
         ClearLastError();
-        if P_CSFileName = '' then
+        FileName := P_CSFileName;
+        if not InitCSVBuffer(P_CSVContent, P_Base64, L_CSVBuffer) then begin
+            Error('Impossibile elaborare il contenuto file', false);
+        end;
+        if FileName = '' then
             error('Nome file deve avere un valore.');
-        if CFileMgt.GetFileNameWithoutExtension(P_CSFileName) <> '' then
-            FileName := CFileMgt.GetFileNameWithoutExtension(P_CSFileName)
-        else
-            FileName := P_CSFileName;
+        if CFileMgt.GetFileNameWithoutExtension(FileName) <> '' then
+            FileName := CFileMgt.GetFileNameWithoutExtension(FileName);
         if StrLen(FileName) > 20 then
             Error('Nome file ' + FileName + 'maggiore di 20 caratteri');
         if FileName = '' then
             error('Nome file deve avere un valore.');
-        if not InitCSVBuffer(P_CSVContent, P_Base64, L_CSVBuffer) then begin
-            Error('Impossibile elaborare il contenuto file', false);
-        end;
         InitImportBOMLog();
         // verifica dal articolo/variante da elaborare, 
         if not Ritem.Get(FileName) then begin
@@ -418,7 +417,6 @@ codeunit 50002 "BOM Import Mgt. PTE"
             V_TempLines.Delete();
             exit;
         end;
-
         // se non esiste creo l'articolo
         if not L_RItem.Get(V_TempLines.Code02) then begin
             ClearLastError();
@@ -474,7 +472,6 @@ codeunit 50002 "BOM Import Mgt. PTE"
             end;
         end;
     end;
-
 
     local procedure AddItemENUTrnsl(P_RItem: Record Item; P_Text: Text)
     var
@@ -617,9 +614,9 @@ codeunit 50002 "BOM Import Mgt. PTE"
             L_RItem.Validate("Net Weight", V_Rec.Num01);
             V_Rec.Bool01 := true;
         end;
-        AddItemENUTrnsl(L_RItem, V_Rec.Text02);
         if V_Rec.Bool01 then
             L_RItem.Modify(true);
+        AddItemENUTrnsl(L_RItem, V_Rec.Text02);
     end;
 
     local procedure F_UpdateBOMLines(var V_TempLines: Record "FLEX Work File FLE" temporary);
@@ -830,12 +827,10 @@ codeunit 50002 "BOM Import Mgt. PTE"
             L_RBomLine.Validate("No.", V_Rec.Code03);
             V_Rec.Bool01 := true;
         end;
-
         if (L_RBomLine.Description <> V_Rec.Text01) and (V_Rec.Text01 <> '') then begin
             L_RBomLine.Validate(Description, CopyStr(V_Rec.Text01, 1, MaxStrLen(L_RBomLine.Description)));
             V_Rec.Bool01 := true;
         end;
-
         if L_RBomLine."Quantity per" <> V_Rec.Num01 then begin
             L_RBomLine.Validate("Quantity per", V_Rec.Num01);
             V_Rec.Bool01 := true;
@@ -922,7 +917,7 @@ codeunit 50002 "BOM Import Mgt. PTE"
     [Obsolete]
     procedure CreateBOML(var V_RBomLine: Record "Production BOM Line"; P_Item: Code[20]; P_Desc: Text[100]; P_Qty: Decimal; P_UM: Code[10]) B_OK: Boolean;
     begin
-        // Obsolete : aggionto Order as Posiotn
+        // Obsolete : aggiunto Order as Position
         TempRec.Init;
         TempRec.Order := 'CreateBOML';
         TempRec.Code01 := V_RBomLine."Production BOM No.";
