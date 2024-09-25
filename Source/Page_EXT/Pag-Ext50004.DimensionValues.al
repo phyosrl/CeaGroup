@@ -5,6 +5,8 @@ pageextension 50004 "Dimension Values PTE" extends "Dimension Values"
     begin
         if GlobalDimCode <> '' then
             Rec."Dimension Code" := GlobalDimCode;
+        // if L_RNoSeries.Get('DIMENSIONI') then
+        //     Rec.Code := L_NoSeriesMgt.GetNextNo('DIMENSIONI', Today, true);
     end;
 
     var
@@ -15,3 +17,4 @@ pageextension 50004 "Dimension Values PTE" extends "Dimension Values"
         GlobalDimCode := P_DimCode;
     end;
 }
+

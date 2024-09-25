@@ -61,8 +61,8 @@ pageextension 50000 "Sales Quote PTE" extends "Sales Quote"
                 if L_Action in [Action::LookupOK, Action::OK, Action::Yes] then begin
                     L_Page.GetRecord(L_RDimValue);
                     Rec.Validate("Shortcut Dimension 1 Code", L_RDimValue.Code);
+                    CalcDimName;
                 end;
-                CalcDimName;
             end;
         }
         modify("Shortcut Dimension 2 Code")
@@ -94,8 +94,8 @@ pageextension 50000 "Sales Quote PTE" extends "Sales Quote"
                 if L_Action in [Action::LookupOK, Action::OK, Action::Yes] then begin
                     L_Page.GetRecord(L_RDimValue);
                     Rec.Validate("Shortcut Dimension 2 Code", L_RDimValue.Code);
+                    CalcDimName;
                 end;
-                CalcDimName;
             end;
 
         }
