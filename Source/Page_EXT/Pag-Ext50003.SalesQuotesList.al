@@ -18,7 +18,6 @@ pageextension 50003 "Sales Quotes List PTE" extends "Sales Quotes"
                 Caption = 'Nome Commessa', Locked = true;
                 Editable = false;
             }
-
         }
         addafter("No.")
         {
@@ -37,9 +36,10 @@ pageextension 50003 "Sales Quotes List PTE" extends "Sales Quotes"
             }
         }
     }
+
     trigger OnAfterGetRecord()
     begin
-        if RDimValue.Get(Rec."Shortcut Dimension 1 Code", Rec."Shortcut Dimension 2 Code") then
+        if RDimValue.Get(RGenLedSetup."Global Dimension 2 Code", Rec."Shortcut Dimension 2 Code") then
             DimName := RDimValue.Name
         else
             DimName := '';
@@ -47,5 +47,11 @@ pageextension 50003 "Sales Quotes List PTE" extends "Sales Quotes"
 
     var
         RDimValue: Record "Dimension Value";
+        RGenLedSetup: Record "General Ledger Setup";
         DimName: Text;
+
+    trigger OnOpenPage()
+    begin
+        RGenLedSetup.Get();
+    end;
 }

@@ -34,12 +34,11 @@ pageextension 50002 "Sales Order List PTE" extends "Sales Order List"
             {
                 ApplicationArea = All;
             }
-
         }
     }
     trigger OnAfterGetRecord()
     begin
-        if RDimValue.Get(Rec."Shortcut Dimension 1 Code", Rec."Shortcut Dimension 2 Code") then
+        if RDimValue.Get(RGenLedSetup."Global Dimension 2 Code", Rec."Shortcut Dimension 2 Code") then
             DimName := RDimValue.Name
         else
             DimName := '';
@@ -47,6 +46,11 @@ pageextension 50002 "Sales Order List PTE" extends "Sales Order List"
 
     var
         RDimValue: Record "Dimension Value";
+        RGenLedSetup: Record "General Ledger Setup";
         DimName: Text;
 
+    trigger OnOpenPage()
+    begin
+        RGenLedSetup.Get();
+    end;
 }

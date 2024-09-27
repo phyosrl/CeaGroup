@@ -43,18 +43,17 @@ pageextension 50000 "Sales Quote PTE" extends "Sales Quote"
             trigger OnLookup(var Text: Text) Ok: Boolean;
             var
                 L_RDimValue: Record "Dimension Value";
-                L_RGenLedSetup: Record "General Ledger Setup";
                 L_Page: Page "Dimension Values";
                 L_Action: Action;
             begin
                 if Rec."No." = '' then
                     exit;
-                L_RGenLedSetup.Get();
+                RGenLedSetup.Get();
                 L_RDimValue.FilterGroup(10);
-                L_RDimValue.SetRange("Dimension Code", L_RGenLedSetup."Global Dimension 1 Code");
+                L_RDimValue.SetRange("Dimension Code", RGenLedSetup."Global Dimension 1 Code");
                 L_RDimValue.FilterGroup(0);
                 L_Page.SetTableView(L_RDimValue);
-                L_Page.SetDimCode(L_RGenLedSetup."Global Dimension 1 Code");
+                L_Page.SetDimCode(RGenLedSetup."Global Dimension 1 Code");
                 L_Page.Editable := true;
                 L_Page.LookupMode := true;
                 L_Action := L_Page.RunModal;
@@ -76,18 +75,17 @@ pageextension 50000 "Sales Quote PTE" extends "Sales Quote"
             trigger OnLookup(var Text: Text) Ok: Boolean;
             var
                 L_RDimValue: Record "Dimension Value";
-                L_RGenLedSetup: Record "General Ledger Setup";
                 L_Page: Page "Dimension Values";
                 L_Action: Action;
             begin
                 if Rec."No." = '' then
                     exit;
-                L_RGenLedSetup.Get();
+                RGenLedSetup.Get();
                 L_RDimValue.FilterGroup(10);
-                L_RDimValue.SetRange("Dimension Code", L_RGenLedSetup."Global Dimension 2 Code");
+                L_RDimValue.SetRange("Dimension Code", RGenLedSetup."Global Dimension 2 Code");
                 L_RDimValue.FilterGroup(0);
                 L_Page.SetTableView(L_RDimValue);
-                L_Page.SetDimCode(L_RGenLedSetup."Global Dimension 2 Code");
+                L_Page.SetDimCode(RGenLedSetup."Global Dimension 2 Code");
                 L_Page.Editable := true;
                 L_Page.LookupMode := true;
                 L_Action := L_Page.RunModal;
@@ -107,11 +105,17 @@ pageextension 50000 "Sales Quote PTE" extends "Sales Quote"
 
     var
         RDimValue: Record "Dimension Value";
+        RGenLedSetup: Record "General Ledger Setup";
         DimName: Text;
+
+    trigger OnOpenPage()
+    begin
+        RGenLedSetup.Get();
+    end;
 
     local procedure CalcDimName()
     begin
-        if RDimValue.Get(Rec."Shortcut Dimension 1 Code", Rec."Shortcut Dimension 2 Code") then
+        if RDimValue.Get(RGenLedSetup."Global Dimension 2 Code", Rec."Shortcut Dimension 2 Code") then
             DimName := RDimValue.Name
         else
             DimName := '';
