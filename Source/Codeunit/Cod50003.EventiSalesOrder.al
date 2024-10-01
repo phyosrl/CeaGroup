@@ -44,4 +44,24 @@ codeunit 50003 "EventiSalesOrder"
         end;
     end;
 
+    [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document-Mailing", 'OnBeforeEmailFileInternal', '', false, false)]
+    local procedure OnBeforeEmailFileInternal(var TempEmailItem: Record "Email Item" temporary; var HtmlBodyFilePath: Text[250]; var EmailSubject: Text[250]; var ToEmailAddress: Text[250]; var PostedDocNo: Code[20]; var EmailDocName: Text[250]; var HideDialog: Boolean; var ReportUsage: Integer; var IsFromPostedDoc: Boolean; var SenderUserID: Code[50]; var EmailScenario: Enum "Email Scenario"; var EmailSentSuccessfully: Boolean; var IsHandled: Boolean)
+    var
+        L_RDocAttc: record "Document Attachment";
+        L_OutStream: OutStream;
+        L_CTempBLob: Codeunit "Temp Blob";
+    begin
+        if PostedDocNo = '' then
+            exit;
+        L_RDocAttc.SetRange("No.", PostedDocNo);
+        IF L_RDocAttc.FindSet() then
+            repeat
+                CLEAR(L_OutStream);
+                CLEAR(L_CTempBLob);
+                L_CTempBLob.CreateOutStream(L_OutStream);
+                L_RDocAttc.ExportToStream(L_OutStream);
+                TempEmailItem.AddAttachment(L_CTempBLob.CreateInStream, L_RDocAttc."File Name");
+            until L_RDocAttc.Next() = 0;
+    end;
+
 }

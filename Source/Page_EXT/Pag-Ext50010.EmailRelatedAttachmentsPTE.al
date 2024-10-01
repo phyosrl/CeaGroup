@@ -2,7 +2,7 @@ pageextension 50010 "Email Related Attachments PTE" extends "Email Related Attac
 {
     layout
     {
-        addlast(Content) // definire posizione su riga!!!!!!!!!!!!!!!!
+        addlast(GroupName) // definire posizione su riga!!!!!!!!!!!!!!!!
         {
             field("Tipo Documento"; Rec."Type Document")
             {
