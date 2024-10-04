@@ -15,7 +15,7 @@ pageextension 50003 "Sales Quotes List PTE" extends "Sales Quotes"
             field(DimName; DimName)
             {
                 ApplicationArea = All;
-                Caption = 'Nome Commessa', Locked = true;
+                Caption = 'Nome Progetto', Locked = true;
                 Editable = false;
             }
         }
@@ -31,6 +31,14 @@ pageextension 50003 "Sales Quotes List PTE" extends "Sales Quotes"
                 ApplicationArea = All;
             }
             field("Manager Vendite"; Rec."Manager Vendite")
+            {
+                ApplicationArea = All;
+            }
+            field("Project Manager"; Rec."Project Manager")
+            {
+                ApplicationArea = All;
+            }
+            field("Data Consegna Offerta"; Rec."Data Consegna Offerta")
             {
                 ApplicationArea = All;
             }

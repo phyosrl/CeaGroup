@@ -8,6 +8,76 @@ pageextension 50012 "Item List PTE" extends "Item List"
             {
                 ApplicationArea = All;
             }
+
+            field("StatusItem"; Rec."StatusItem")
+            {
+                ApplicationArea = All;
+                Caption = 'Stato Articolo';
+                Visible = false;
+            }
+            field("Nr. Produttore"; Rec."Nr. Produttore")
+            {
+                ApplicationArea = All;
+                Visible = false;
+            }
+            field("Produttore"; Rec."Produttore")
+            {
+                ApplicationArea = All;
+                Visible = false;
+            }
+            field("Specifica 1"; Rec."Specifica 1")
+            {
+                ApplicationArea = All;
+                Visible = false;
+            }
+            field("Specifica 2"; Rec."Specifica 2")
+            {
+                ApplicationArea = All;
+                Visible = false;
+            }
+            field("Specifica 3"; Rec."Specifica 3")
+            {
+                ApplicationArea = All;
+                Visible = false;
+            }
+            field("Specifica 4"; Rec."Specifica 4")
+            {
+                ApplicationArea = All;
+                Visible = false;
+            }
+            field("Specifica 5"; Rec."Specifica 5")
+            {
+                ApplicationArea = All;
+                Visible = false;
+            }
+            field("Specifica 6"; Rec."Specifica 6")
+            {
+                ApplicationArea = All;
+                Visible = false;
+            }
+            field("Specifica 7"; Rec."Specifica 7")
+            {
+                ApplicationArea = All;
+                Visible = false;
+            }
+            field("Specifica 8"; Rec."Specifica 8")
+            {
+                ApplicationArea = All;
+                Visible = false;
+            }
+            field("Specifica 9"; Rec."Specifica 9")
+            {
+                ApplicationArea = All;
+                Visible = false;
+            }
+            field("Specifica 10"; Rec."Specifica 10")
+            {
+                ApplicationArea = All;
+                Visible = false;
+            }
+
+
+
         }
     }
     actions

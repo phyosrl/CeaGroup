@@ -12,7 +12,7 @@ pageextension 50000 "Sales Quote PTE" extends "Sales Quote"
                 field(DimName; DimName)
                 {
                     ApplicationArea = All;
-                    Caption = 'Nome Commessa', Locked = true;
+                    Caption = 'Nome Progetto', Locked = true;
                     Editable = false;
                 }
                 field("Desc. Progetto"; Rec."Project Desc")
@@ -27,6 +27,15 @@ pageextension 50000 "Sales Quote PTE" extends "Sales Quote"
                 {
                     ApplicationArea = All;
                 }
+                field("Project Manager"; Rec."Project Manager")
+                {
+                    ApplicationArea = All;
+                }
+                field("Data Consegna Offerta"; Rec."Data Consegna Offerta")
+                {
+                    ApplicationArea = All;
+                }
+
             }
         }
 

@@ -11,7 +11,7 @@ pageextension 50001 "Sales Order PTE" extends "Sales Order"
                 field(DimName; DimName)
                 {
                     ApplicationArea = All;
-                    Caption = 'Nome Commessa', Locked = true;
+                    Caption = 'Nome Progetto', Locked = true;
                     Editable = false;
                 }
                 field("Desc. Progetto"; Rec."Project Desc")
@@ -23,6 +23,10 @@ pageextension 50001 "Sales Order PTE" extends "Sales Order"
                     ApplicationArea = All;
                 }
                 field("Manager Vendite"; Rec."Manager Vendite")
+                {
+                    ApplicationArea = All;
+                }
+                field("Project Manager"; Rec."Project Manager")
                 {
                     ApplicationArea = All;
                 }

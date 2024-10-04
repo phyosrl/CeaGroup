@@ -17,5 +17,17 @@ tableextension 50000 "Sales Header PTE" extends "Sales Header"
             Caption = 'Manager Vendite', Locked = true;
             DataClassification = CustomerContent;
         }
+        field(50003; "Data Consegna Offerta"; Text[200])
+        {
+            Caption = 'Data Consegna Offerta', Locked = true;
+            DataClassification = CustomerContent;
+        }
+        field(50004; "Project Manager"; Text[200])
+        {
+            Caption = 'Project Manager', Locked = true;
+            DataClassification = CustomerContent;
+        }
+
+
     }
 }
