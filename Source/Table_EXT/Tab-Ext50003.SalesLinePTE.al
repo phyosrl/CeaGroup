@@ -5,12 +5,12 @@ tableextension 50003 "Sales Line" extends "Sales Line"
         field(50000; "Stato Riga"; Text[50])
         {
             Caption = 'Stato Riga';
-            DataClassification = ToBeClassified;
+            DataClassification = CustomerContent;
         }
         field(50001; "Quantita prenotata"; Decimal)
         {
             Caption = 'Quantita prenotata';
-            DataClassification = ToBeClassified;
+            DataClassification = CustomerContent;
             DecimalPlaces = 0 : 5;
         }
 

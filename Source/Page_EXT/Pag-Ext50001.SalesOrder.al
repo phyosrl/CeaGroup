@@ -37,7 +37,7 @@ pageextension 50001 "Sales Order PTE" extends "Sales Order"
         moveafter("Shortcut Dimension 1 Code"; "Shortcut Dimension 2 Code")
         modify("Shortcut Dimension 1 Code")
         {
-
+            ShowMandatory = true;
             trigger OnAfterValidate()
             begin
                 CalcDimName();
@@ -69,6 +69,7 @@ pageextension 50001 "Sales Order PTE" extends "Sales Order"
         }
         modify("Shortcut Dimension 2 Code")
         {
+            ShowMandatory = true;
             trigger OnAfterValidate()
             begin
                 CalcDimName;

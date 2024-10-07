@@ -17,10 +17,10 @@ page 50009 noserie2
         {
             repeater(General)
             {
-                field(allowGapsInNos; Rec."Allow Gaps in Nos.")
-                {
-                    Caption = 'Allow Gaps in Nos.';
-                }
+                // field(allowGapsInNos; Rec."Allow Gaps in Nos.")
+                // {
+                //     Caption = 'Allow Gaps in Nos.';
+                // }
                 field(endingNo; Rec."Ending No.")
                 {
                     Caption = 'Ending No.';

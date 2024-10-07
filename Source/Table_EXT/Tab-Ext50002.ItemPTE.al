@@ -73,7 +73,7 @@ tableextension 50002 "Item PTE" extends Item
         field(50013; "StatusItem"; Enum "StatusItem")
         {
             Caption = 'StatusItem';
-            DataClassification = ToBeClassified;
+            DataClassification = CustomerContent;
         }
 
 

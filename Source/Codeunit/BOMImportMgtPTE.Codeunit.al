@@ -434,13 +434,15 @@ codeunit 50002 "BOM Import Mgt. PTE"
         end;
         ClearLastError();
         // Aggiorno l'articolo
-        L_OK := UpdateItem(L_RItem, V_TempLines.Text01, V_TempLines.Txt01, V_TempLines.Text02, V_TempLines.Txt02, V_TempLines.Num02, L_Modify);
-        if L_OK then begin
-            if L_RItem.Blocked then begin
-                L_RItem.Get(L_RItem."No.");
-                L_RItem.Blocked := false;
-                L_RItem.Modify();
-                AddMsgLine('Sbloccato articolo nr. ' + L_RItem."No.", true);
+        if L_RItem.StatusItem = L_RItem.StatusItem::Certificato then begin
+            L_OK := UpdateItem(L_RItem, V_TempLines.Text01, V_TempLines.Txt01, V_TempLines.Text02, V_TempLines.Txt02, V_TempLines.Num02, L_Modify);
+            if L_OK then begin
+                if L_RItem.Blocked then begin
+                    L_RItem.Get(L_RItem."No.");
+                    L_RItem.Blocked := false;
+                    L_RItem.Modify();
+                    AddMsgLine('Sbloccato articolo nr. ' + L_RItem."No.", true);
+                end;
             end;
         end;
         if L_Modify or (not L_OK) then
