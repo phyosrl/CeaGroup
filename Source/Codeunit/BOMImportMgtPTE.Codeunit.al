@@ -434,7 +434,7 @@ codeunit 50002 "BOM Import Mgt. PTE"
         end;
         ClearLastError();
         // Aggiorno l'articolo
-        if L_RItem.StatusItem = L_RItem.StatusItem::Certificato then begin
+        if L_RItem.StatusItem IN [L_RItem.StatusItem::"In Sviluppo", L_RItem.StatusItem::Nuovo] then begin
             L_OK := UpdateItem(L_RItem, V_TempLines.Text01, V_TempLines.Txt01, V_TempLines.Text02, V_TempLines.Txt02, V_TempLines.Num02, L_Modify);
             if L_OK then begin
                 if L_RItem.Blocked then begin
@@ -791,9 +791,9 @@ codeunit 50002 "BOM Import Mgt. PTE"
     begin
         if P_RBomLine."No." <> P_ItemNo then
             exit(true);
-        if P_ItemCat <> CCEA.GetDefaultMPItemCategoryCode then
-            if P_RBomLine.Description <> P_Desc then
-                exit(true);
+        //if P_ItemCat <> CCEA.GetDefaultMPItemCategoryCode then
+        if P_RBomLine.Description <> P_Desc then
+            exit(true);
         if P_RBomLine."Quantity per" <> P_Qty then
             exit(true);
         exit(false);

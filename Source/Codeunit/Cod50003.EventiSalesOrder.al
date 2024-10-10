@@ -2,6 +2,7 @@ codeunit 50003 "EventiSalesOrder"
 {
     var
         LblMAIL: label 'MAIL-ORDINE', Locked = true;
+        L_CSingleEvent: Codeunit "Single Events FLE";
 
     [EventSubscriber(ObjectType::Table, Database::"Reservation Entry", 'OnAfterInsertEvent', '', false, false)]
     local procedure AggiornaQuantitaPrenotataDopoInserimento(Rec: Record "Reservation Entry")
@@ -57,11 +58,18 @@ codeunit 50003 "EventiSalesOrder"
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document-Print", OnBeforeDoPrintSalesHeader, '', false, false)]
     local procedure "Document-Print_OnBeforeDoPrintSalesHeader"(var SalesHeader: Record "Sales Header"; ReportUsage: Integer; SendAsEmail: Boolean; var IsPrinted: Boolean)
-    var
-        L_CIEvent: Codeunit "Single Events FLE";
     begin
         if SalesHeader."Document Type" = SalesHeader."Document Type"::Order then
-            L_CIEvent.SetText(LblMAIL, SalesHeader."No.");
+            L_CSingleEvent.SetText(LblMAIL, SalesHeader."No.");
+    end;
+
+
+
+    [EventSubscriber(ObjectType::Table, Database::"Purchase Header", OnBeforeSendRecords, '', false, false)]
+    local procedure "Purchase Header_OnBeforeSendRecords"(var PurchaseHeader: Record "Purchase Header"; var IsHandled: Boolean)
+    begin
+        if PurchaseHeader."Document Type" = PurchaseHeader."Document Type"::Order then
+            L_CSingleEvent.SetText(LblMAIL, PurchaseHeader."No.");
     end;
 
     [EventSubscriber(ObjectType::Codeunit, Codeunit::Email, OnFindRelatedAttachments, '', false, false)]
@@ -69,25 +77,27 @@ codeunit 50003 "EventiSalesOrder"
     var
         L_CIEvent: Codeunit "Single Events FLE";
         L_DocNo: Text;
-        L_RSalesLine: record "Sales Line";
+        L_RSalesL: record "Sales Line";
+        L_RPurchL: Record "Purchase Line";
         L_RDocAtt: record "Document Attachment";
         Temp_LBuffer: record "Name/Value Buffer" temporary;
     begin
+        // inserisco allegati articoli come allegati selezionabili in anteprima mail ordini 
         L_DocNo := L_CIEvent.GetTextAndDelete(LblMAIL);
         if L_DocNo = '' then
             exit;
         L_RDocAtt.SetRange("Table ID", Database::Item);
-        // da definire meglio il filtro
-        L_RDocAtt.SetRange("Type Document", L_RDocAtt."Type Document"::Documento);
-        L_RSalesLine.SetRange("Document Type", L_RSalesLine."Document Type"::Order);
-        L_RSalesLine.SetRange("Document No.", L_DocNo);
-        L_RSalesLine.setrange(Type, L_RSalesLine.Type::Item);
-        L_RSalesLine.SetFilter(Quantity, '<>0');
-        if L_RSalesLine.FindSet() then
+        // ordini vendita
+        L_RSalesL.SetRange("Document Type", L_RSalesL."Document Type"::Order);
+        L_RSalesL.SetRange("Document No.", L_DocNo);
+        L_RSalesL.setrange(Type, L_RSalesL.Type::Item);
+        L_RSalesL.SetFilter(Quantity, '<>0');
+        if L_RSalesL.FindSet() then begin
+            L_RDocAtt.SetRange("Document Flow Sales", true);
             repeat
-                Temp_LBuffer.SetRange(Name, L_RSalesLine."No.");
+                Temp_LBuffer.SetRange(Name, L_RSalesL."No.");
                 if not Temp_LBuffer.FindFirst() then begin
-                    L_RDocAtt.SetRange("No.", L_RSalesLine."No.");
+                    L_RDocAtt.SetRange("No.", L_RSalesL."No.");
                     if L_RDocAtt.FindSet() then
                         repeat
                             EmailRelatedAttachments."Attachment Name" := L_RDocAtt."File Name" + '.' + L_RDocAtt."File Extension";
@@ -99,10 +109,36 @@ codeunit 50003 "EventiSalesOrder"
                             EmailRelatedAttachments.Insert();
                         until L_RDocAtt.Next() = 0;
                 end;
-                Temp_LBuffer.AddNewEntry(L_RSalesLine."No.", '');
-            until L_RSalesLine.next = 0;
+                Temp_LBuffer.AddNewEntry(L_RSalesL."No.", '');
+            until L_RSalesL.next = 0;
+            L_RDocAtt.SetRange("Document Flow Sales");
+        end;
+        // ordini acquisto
+        L_RPurchL.SetRange("Document Type", L_RPurchL."Document Type"::Order);
+        L_RPurchL.SetRange("Document No.", L_DocNo);
+        L_RPurchL.setrange(Type, L_RPurchL.Type::Item);
+        L_RPurchL.SetFilter(Quantity, '<>0');
+        if L_RPurchL.FindSet() then begin
+            L_RDocAtt.SetRange("Document Flow Purchase", true);
+            repeat
+                Temp_LBuffer.SetRange(Name, L_RPurchL."No.");
+                if not Temp_LBuffer.FindFirst() then begin
+                    L_RDocAtt.SetRange("No.", L_RPurchL."No.");
+                    if L_RDocAtt.FindSet() then
+                        repeat
+                            EmailRelatedAttachments."Attachment Name" := L_RDocAtt."File Name" + '.' + L_RDocAtt."File Extension";
+                            EmailRelatedAttachments."Attachment Table ID" := Database::"Document Attachment";
+                            EmailRelatedAttachments."Attachment System ID" := L_RDocAtt.SystemId;
+                            EmailRelatedAttachments."Type Document" := L_RDocAtt."Type Document";
+                            EmailRelatedAttachments."Date Revision" := L_RDocAtt."Date Revision";
+                            EmailRelatedAttachments.Revision := L_RDocAtt.Revision;
+                            EmailRelatedAttachments.Insert();
+                        until L_RDocAtt.Next() = 0;
+                end;
+                Temp_LBuffer.AddNewEntry(L_RPurchL."No.", '');
+            until L_RPurchL.next = 0;
+        end;
     end;
-
 
     // [EventSubscriber(ObjectType::Codeunit, Codeunit::"Document-Mailing", 'OnBeforeEmailFileInternal', '', false, false)]
     // local procedure OnBeforeEmailFileInternal(var TempEmailItem: Record "Email Item" temporary; var HtmlBodyFilePath: Text[250]; var EmailSubject: Text[250]; var ToEmailAddress: Text[250]; var PostedDocNo: Code[20]; var EmailDocName: Text[250]; var HideDialog: Boolean; var ReportUsage: Integer; var IsFromPostedDoc: Boolean; var SenderUserID: Code[50]; var EmailScenario: Enum "Email Scenario"; var EmailSentSuccessfully: Boolean; var IsHandled: Boolean)
