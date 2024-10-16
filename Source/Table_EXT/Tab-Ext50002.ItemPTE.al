@@ -72,10 +72,22 @@ tableextension 50002 "Item PTE" extends Item
         }
         field(50013; "StatusItem"; Enum "StatusItem")
         {
-            Caption = 'StatusItem';
+            Caption = 'StatusItem', Locked = true;
             DataClassification = CustomerContent;
         }
 
+        field(50014; "ItemGroup"; Text[200])
+        {
+            Caption = 'ItemGroup', Locked = true;
+            DataClassification = CustomerContent;
+            TableRelation = "General Table FLE".Code where(TableCode = const('ARTFAMIGLIA'),
+                                                            TableCode02 = const(''));
+        }
+        field(50015; "Nr. Produttore 2"; Text[200])
+        {
+            Caption = 'Nr. Produttore 2', Locked = true;
+            DataClassification = CustomerContent;
+        }
 
 
     }

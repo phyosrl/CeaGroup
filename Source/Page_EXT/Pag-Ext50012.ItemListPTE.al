@@ -9,6 +9,13 @@ pageextension 50012 "Item List PTE" extends "Item List"
                 ApplicationArea = All;
             }
 
+            field("ItemGroup"; Rec."ItemGroup")
+            {
+                ApplicationArea = All;
+                Caption = 'Famiglia Articolo';
+                Visible = false;
+            }
+
             field("StatusItem"; Rec."StatusItem")
             {
                 ApplicationArea = All;
@@ -18,13 +25,23 @@ pageextension 50012 "Item List PTE" extends "Item List"
             field("Nr. Produttore"; Rec."Nr. Produttore")
             {
                 ApplicationArea = All;
+                Caption = 'Codice Produttore';
                 Visible = false;
             }
+
+            field("Nr. Produttore 2"; Rec."Nr. Produttore 2")
+            {
+                ApplicationArea = All;
+                Caption = 'Codice Produttore Secondario';
+                Visible = false;
+            }
+
             field("Produttore"; Rec."Produttore")
             {
                 ApplicationArea = All;
                 Visible = false;
             }
+
             field("Specifica 1"; Rec."Specifica 1")
             {
                 ApplicationArea = All;
