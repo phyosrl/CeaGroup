@@ -11,7 +11,12 @@ pageextension 50009 "Document Attachment DetailsPTE" extends "Document Attachmen
                 Caption = 'Tipo Documento';
                 Visible = true;
             }
-
+            field("Description Document PTE"; Rec."Description Document PTE")
+            {
+                ApplicationArea = All;
+                Caption = 'Descrizione Documento';
+                Visible = true;
+            }
             field("Revisione"; Rec."Revision")
             {
                 ApplicationArea = All;

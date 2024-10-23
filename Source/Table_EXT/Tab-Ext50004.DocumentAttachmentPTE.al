@@ -17,5 +17,11 @@ tableextension 50004 "Document AttachmentPTE" extends "Document Attachment"
             Caption = 'Date Revision';
             DataClassification = CustomerContent;
         }
+        field(50003; "Description Document PTE"; Text[100])
+        {
+            Caption = 'Description Document PTE';
+            DataClassification = CustomerContent;
+        }
+
     }
 }
